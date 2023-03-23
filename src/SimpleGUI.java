@@ -21,13 +21,6 @@ public class SimpleGUI extends JFrame implements ActionListener, ChangeListener 
     private JTextField textField;
     private JCheckBox checkBox1;
     private JCheckBox checkBox2;
-    private JMenu menu2;
-    private JMenu menu1;
-    private JMenuItem menuItem1;
-    private JMenuItem menuItem2;
-    private JMenuItem helpItem1;
-    private JMenuItem helpItem2;
-    private JSlider slider;
 
     public SimpleGUI() {
         super("Frame title");
@@ -37,19 +30,19 @@ public class SimpleGUI extends JFrame implements ActionListener, ChangeListener 
     private void init() {
         // setting up the frame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 400);
+        setSize(500, 450);
         setLocation(300, 50);
 
         // create the MenuBar and menu components
         JMenuBar menuBar = new JMenuBar();
-        menu1 = new JMenu("File");
-        menuItem1 = new JMenuItem("Open");
-        menuItem2 = new JMenuItem("Save as");
+        JMenu menu1 = new JMenu("File");
+        JMenuItem menuItem1 = new JMenuItem("Open");
+        JMenuItem menuItem2 = new JMenuItem("Save as");
         menu1.add(menuItem1);
         menu1.add(menuItem2);
-        menu2 = new JMenu("Help");
-        helpItem1 = new JMenuItem("FAQ");
-        helpItem2 = new JMenuItem("About");
+        JMenu menu2 = new JMenu("Help");
+        JMenuItem helpItem1 = new JMenuItem("FAQ");
+        JMenuItem helpItem2 = new JMenuItem("About");
         menu2.add(helpItem1);
         menu2.add(helpItem2);
 
@@ -59,13 +52,15 @@ public class SimpleGUI extends JFrame implements ActionListener, ChangeListener 
 
         // create the big text area located in the middle
         textArea = new JTextArea();
+        textArea.setFont(new Font("", Font.BOLD, 10));
+
 
         // create welcome label
         welcomeLabel = new JLabel("Welcome to my GUI!");
         welcomeLabel.setFont(new Font("Helvetica", Font.BOLD, 20));
 
         // create slider and adjust settings
-        slider = new JSlider(0, 40, 20);
+        JSlider slider = new JSlider(0, 40, 20);
         slider.setMinorTickSpacing(1);
         slider.setMajorTickSpacing(5);
         slider.setPaintTicks(true);
@@ -84,11 +79,12 @@ public class SimpleGUI extends JFrame implements ActionListener, ChangeListener 
         textField = new JTextField(10);
         JButton sendButton = new JButton("Send");
         JButton resetButton = new JButton("Reset");
+        JButton openButton = new JButton("Open");
 
         // create checkboxes
-        checkBox1 = new JCheckBox("Yes");
+        checkBox1 = new JCheckBox("Separate Line", true);
         checkBox1.setBounds(100, 100, 50, 50);
-        checkBox2 = new JCheckBox("No", true);
+        checkBox2 = new JCheckBox("nothing lol", false);
         checkBox2.setBounds(100, 150, 50, 50);
 
         // create a panel for organizing the components at the bottom
@@ -99,6 +95,7 @@ public class SimpleGUI extends JFrame implements ActionListener, ChangeListener 
         panel.add(textField);
         panel.add(sendButton);
         panel.add(resetButton);
+        panel.add(openButton);
         panel.add(checkBox1);
         panel.add(checkBox2);
 
@@ -123,6 +120,7 @@ public class SimpleGUI extends JFrame implements ActionListener, ChangeListener 
         helpItem2.addActionListener(this);
         sendButton.addActionListener(this);
         resetButton.addActionListener(this);
+        openButton.addActionListener(this);
 
         slider.addChangeListener(this);
 
@@ -146,25 +144,39 @@ public class SimpleGUI extends JFrame implements ActionListener, ChangeListener 
 
         if (text.equals("Send")) {
             welcomeLabel.setText("Sent!");
+            if (checkBox1.isSelected()) {textArea.append("\n");}
             textArea.append(textField.getText());
+            //if (checkBox2.isSelected()) {textArea.append("\n");}
             //textField.setText("");
         } else if (text.equals("Reset")) {
             welcomeLabel.setText("Reset!");
             textArea.setText("");
             textField.setText("");
 
-            checkBox1.setSelected(false);
+            checkBox1.setSelected(true);
             checkBox2.setSelected(false);
-        } else if (text.equals("Open") || text.equals("Save as")
+        } else if (text.equals("Save as")
                 || text.equals("FAQ") || text.equals("About")) {
 
             textField.setText(text);
+        } else if (text.equals("Open")) {
+            JFrame window = new JFrame("Little Window");
+            window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            window.setSize(200, 150);
+            window.setLocation(350, 100);
+
+            JLabel smallTextLabel = new JLabel("HELLO!!");
+
+            window.add(smallTextLabel, BorderLayout.NORTH);
+
+            window.setVisible(true);
         }
     }
 
     public void stateChanged(ChangeEvent e) {
-        String num = String.valueOf(((JSlider) e.getSource()).getValue());
+        int num = ((JSlider) e.getSource()).getValue();
 
-        textArea.setText(num);
+        textArea.setFont(new Font("", Font.BOLD, num));
+        //textArea.setText(num);
     }
 }
